@@ -4,14 +4,21 @@ const db = require("../models")
 module.exports = function (app) {
 
     app.get("/api/workouts/", (req,res) =>{
-        db.Workout.find({}, (error,data)=> {
-            if (error) {
-                res.send(error);
-            } else {
-                res.json(data)
+        
+        db.Workout.aggregate([{
+            $addFields: { 
+                "totalDuration" : {
+                    $sum : "$exercises.duration"
+                }
             }
-        });
-       
+        }], (err,data)=>{
+            if(err){
+                res.send(error)
+            } else{
+                console.log(data)
+                res.send(data)
+            }
+        })
         
     })
 
@@ -39,11 +46,20 @@ module.exports = function (app) {
     });
 
     app.get("/api/workouts/range", (req,res) => {
-        db.Workout.find({}, (error,data)=> {
-            if (error) {
-                res.send(error);
-            } else {
-                res.json(data)
+        db.Workout.aggregate([{
+            $addFields: { 
+                "totalDuration" : {
+                    $sum : "$exercises.duration"
+                }
+            }
+        }], )
+        .sort({'day': -1})
+        .limit(7)
+        .exec((err,data)=>{
+            if(err){
+                res.send(error)
+            } else{
+                res.send(data)
             }
         })
     })

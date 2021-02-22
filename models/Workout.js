@@ -45,7 +45,19 @@ const WorkoutSchema = new Schema({
             }
         }
     ]
-})
+}
+
+// {
+//     toJSON: {
+//         virtuals: true
+//     }
+// }
+
+// WorkoutSchema.virtual("aggregate").get(
+
+// )
+
+)
 
 const Workout = mongoose.model("Workout", WorkoutSchema);
 
